@@ -1,0 +1,53 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+void selectionsort(int vet[], int N){
+    int min, temp;
+    for(int i=0; i<N; i++){
+        min = i;
+        for(int j=i; j<N; j++){
+            if(vet[j] < vet[min]){
+                min =j;
+            }
+        }
+        if(vet[i] != vet[min]){
+            temp = vet[i];
+            vet[i] = vet[min];
+            vet[min] = temp;
+        }
+    }
+}
+
+void OrdemCrescente(int v[], int n){
+    int i;
+    for(i = 0; i < n; i++)
+        v[i] = i;
+}
+
+void OrdemDecrescente(int v[], int n){
+    int i;
+    for(i = 0; i < n; i++)
+        v[i] = n-i;
+}
+
+void Aleatoriamente(int v[], int n){
+    int i;
+    for(i = 0; i < n; i++)
+        v[i] = rand();
+}
+
+void main(int argc, char** argv) {
+    
+    srand(time(NULL));
+    int N = 100000, i;
+    int v[N];
+    Aleatoriamente(v, N);
+    double inicio, fim, tempo;
+    inicio = (double) clock() / CLOCKS_PER_SEC;
+    selectionsort(v, N);
+    fim = (double) clock() / CLOCKS_PER_SEC;
+    tempo = fim - inicio;
+    printf("Tempo total em segundos: %f\n", tempo);
+    
+}
