@@ -1,0 +1,198 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+   #define CAPACIDADE 100001
+
+
+struct Heap {
+   int tamanho;
+   int vetor[CAPACIDADE];
+};
+
+typedef struct Heap MaxHeap;
+
+
+void imprimeHeap (MaxHeap* h) {
+   int i;
+   printf ("Heap h\n");
+   for (i = 1; i <= h->tamanho; i++) {
+      printf ("heap[%d] : %d\n", i, h->vetor[i]);
+   }
+   printf ("\n");
+}
+
+
+int obtemFilhoMenor (MaxHeap* h, int filhoEsquerdo, int filhoDireito) {
+   int minimo;
+   int indiceMinimo;
+   if (filhoEsquerdo <= (h->tamanho) && filhoDireito <= (h->tamanho)) {
+      minimo = h->vetor[filhoEsquerdo];
+      indiceMinimo = filhoEsquerdo;
+      if (minimo > h->vetor[filhoDireito]) {
+         minimo = h->vetor[filhoDireito];
+         indiceMinimo = filhoDireito;
+      }
+      return indiceMinimo;
+   } else if (filhoEsquerdo <= (h->tamanho) && filhoDireito > (h->tamanho)) {
+      return filhoEsquerdo;
+   } else if (filhoDireito <= (h->tamanho) && filhoEsquerdo > (h->tamanho)) {
+      return filhoDireito;
+   } else {
+      return CAPACIDADE + 1;
+   }
+}
+
+
+int obtemFilhoMaior (MaxHeap* h, int filhoEsquerdo, int filhoDireito) {
+   int maximo;
+   int indiceMaximo;
+   if (filhoEsquerdo <= (h->tamanho) && filhoDireito <= (h->tamanho)) {
+      maximo = h->vetor[filhoEsquerdo];
+      indiceMaximo = filhoEsquerdo;
+      if (maximo < h->vetor[filhoDireito]) {
+         maximo = h->vetor[filhoDireito];
+         indiceMaximo = filhoDireito;
+      }
+      return indiceMaximo;
+   } else if (filhoEsquerdo <= (h->tamanho) && filhoDireito > (h->tamanho)) {
+      return filhoEsquerdo;
+   } else if (filhoDireito <= (h->tamanho) && filhoEsquerdo > (h->tamanho)) {
+      return filhoDireito;
+   } else {
+      return CAPACIDADE + 1;
+   }
+}
+
+
+int rebaixa (int i, MaxHeap* h) {
+   int filhoEsquerdo;
+   int filhoDireito;
+   int filhoMaior;
+   int filhoMenor;
+   int aux;
+   while (i <= (h->tamanho)) {
+      filhoEsquerdo = 2 * i;
+      filhoDireito = 2 * i + 1;
+      filhoMaior = obtemFilhoMaior(h, filhoEsquerdo, filhoDireito);
+      filhoMenor = obtemFilhoMenor(h, filhoEsquerdo, filhoDireito);
+      if ((filhoMaior <= h->tamanho) && (h->vetor[i] < h->vetor[filhoMaior])) {
+         aux = h->vetor[filhoMaior];
+         h->vetor[filhoMaior] = h->vetor[i];
+         h->vetor[i] = aux;
+         i = filhoMaior;
+      } else if ((filhoMenor <= h->tamanho) && (h->vetor[i] < h->vetor[filhoMenor])) {
+         aux = h->vetor[filhoMenor];
+         h->vetor[filhoMenor] = h->vetor[i];
+         h->vetor[i] = aux;
+         i = filhoMenor;
+      } else {
+         return i;
+      }
+   }
+   return i;
+}
+
+
+int extraiMaximo (MaxHeap* h) {
+   int maximo;
+   if ((h->tamanho) > 1) {
+      maximo = h->vetor[1];
+      h->vetor[1] = h->vetor[(h->tamanho)];
+      (h->tamanho) = (h->tamanho) - 1;
+      rebaixa (1, h);
+   } else if (h->tamanho == 1) {
+      maximo = h->vetor[1];
+      (h->tamanho) = 0;
+   } else {
+      maximo = -1;
+   }
+   return maximo;
+}
+
+
+int promove (int i, MaxHeap* h) {
+   int aux;
+   while (i > 1) {
+      if (h->vetor[i] > h->vetor[ i / 2 ]) {
+         aux = h->vetor[i];
+         h->vetor[i] = h->vetor[i / 2];
+         h->vetor[i / 2] = aux;
+         i = i / 2;
+      } else {
+         return i;
+      }
+   }
+   return i;
+}
+
+
+int insere (int x, MaxHeap* h) {
+   int indiceX = -1;
+   h->tamanho = (h->tamanho) + 1;
+
+   if (h->tamanho < CAPACIDADE) {
+      h->vetor[h->tamanho] = x;
+      indiceX = h->tamanho;
+      indiceX = promove (indiceX, h);
+   }
+   return indiceX;
+}
+
+void OrdemCrescente(MaxHeap *MaxHeap, int n){
+    int i;
+    for(i = 0; i < n; i++)
+        insere(i, MaxHeap);
+}
+
+void OrdemDecrescente(MaxHeap *MaxHeap, int n){
+    int i;
+    for(i = 0; i < n; i++)
+        insere(n-i, MaxHeap);
+}
+
+
+
+void Aleatoriamente(MaxHeap *MaxHeap, int n){
+    int i;
+    for(i = 0; i < n; i++)
+        insere(rand(), MaxHeap);
+}
+
+
+void HeapSort (MaxHeap* maxHeap, int vetor[CAPACIDADE], int n) {
+   int i;
+   for (i = n - 1; i >= 0; i--) {
+      vetor[i] = extraiMaximo(maxHeap);
+   }
+}
+
+int main() {
+   int n = CAPACIDADE;
+   MaxHeap maxHeap;
+   int vetor[CAPACIDADE] = {0, };
+
+   maxHeap.tamanho = 0;
+
+   srand(time(NULL));
+
+      //retire o comentario da opção que deseja testar
+       //Aleatoriamente(&maxHeap, n);
+       //OrdemDecrescente(&maxHeap, n);
+      //OrdemCrescente(&maxHeap,n);
+      double start, stop, elapsed; // variaveis para medir o tempo
+      start = (double) clock() / CLOCKS_PER_SEC;
+      HeapSort (&maxHeap, vetor, n);
+      stop = (double) clock() / CLOCKS_PER_SEC;
+      elapsed = stop - start;
+      printf("Tempo total em segundos: %f\n", elapsed);
+      
+      /*
+         printf("\nSaída: \n");
+  for(int i=0;i<n;i++){
+      printf("%d ", vetor[i]);
+  }
+*/
+
+   return 0;
+}
