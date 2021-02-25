@@ -1,0 +1,53 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+void bubbleSort(int array[], int length){  
+    int i, j;  
+    for(i = length - 1; i > 0; i--){
+        for(j = 0; j < i; j++){
+            if(array[j] > array[j+1]){
+                int temp;
+                temp = array[j];
+                array[j] = array[j+1];
+                array[j+1] = temp;
+            }
+        }
+    }
+}
+
+void OrdemDecrescente(int v[], int n){
+    int i;
+    for(i = 0; i < n; i++)
+        v[i] = n-i;
+}
+
+void OrdemCrescente(int v[], int n){
+    int i;
+    for(i = 0; i < n; i++)
+        v[i] = i;
+}
+
+void Aleatoriamente(int v[], int n){
+    int i;
+    for(i = 0; i < n; i++)
+        v[i] = rand();
+}
+
+
+void main() {
+    srand(time(NULL));
+    int N = 100000, i;
+    int v[N];
+    Aleatoriamente(v, N);
+    
+    double inicio, fim, tempo;
+    inicio = (double) clock() / CLOCKS_PER_SEC;
+    bubbleSort(v, N);
+    fim = (double) clock() / CLOCKS_PER_SEC;
+    tempo = fim - inicio;
+    printf("Tempo total em segundos: %f\n", tempo);
+    
+    return 0;
+}
+
