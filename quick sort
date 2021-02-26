@@ -1,0 +1,65 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+void quicksort(int valores[], int inicio, int fim){    
+    int i, j, pivo, aux;    
+    i = inicio;    
+    j = fim;    
+    pivo = valores[(i+j)/2];    
+    while(i <= j){ 
+        while(valores[i] < pivo && i < fim) 
+        i++;
+        while(valores[j] > pivo && j > inicio) 
+        j--;
+       
+        if(i <= j){ 
+            aux = valores[i]; 
+            valores[i] = valores[j]; 
+            valores[j] = aux; 
+            i++; 
+            j--; 
+        }
+    }    
+    
+    if(j > inicio) 
+        quicksort(valores, inicio, j);    
+    if(i < fim) 
+        quicksort(valores, i, fim);
+}
+
+void OrdemDecrescente(int v[], int n){
+    int i;
+    for(i = 0; i < n; i++)
+        v[i] = n-i;
+}
+
+void OrdemCrescente(int v[], int n){
+    int i;
+    for(i = 0; i < n; i++)
+        v[i] = i;
+}
+
+void Aleatoriamente(int v[], int n){
+    int i;
+    for(i = 0; i < n; i++)
+        v[i] = rand();
+}
+
+int main() {
+    
+    srand(time(NULL));
+    int N = 100000, i;
+    int v[N];
+    Aleatoriamente(v, N);
+
+    double inicio, fim, tempo;
+    inicio = (double) clock() / CLOCKS_PER_SEC;
+    quicksort(v, 0, N-1);
+    fim = (double) clock() / CLOCKS_PER_SEC;
+    tempo = fim - inicio;
+    printf("Tempo total em segundos: %f\n", tempo);
+   
+
+    return 0;
+}
+
